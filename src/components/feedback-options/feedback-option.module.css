@@ -6,6 +6,9 @@
 
 .button {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   background: #565a42;
   width: 60px;

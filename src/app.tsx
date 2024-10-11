@@ -5,6 +5,8 @@ import {
   Notification,
 } from "./components";
 import React, { useState } from "react";
+import styles from "./app.module.css";
+
 const App: React.FC = () => {
   const [state, setState] = useState({
     good: 0,
@@ -13,13 +15,20 @@ const App: React.FC = () => {
   });
 
   const handleFeedback = (type: string) => {
+    const feedbackMap: Record<string, keyof typeof state> = {
+      "😊": "good",
+      "😐": "neutral",
+      "😢": "bad",
+    };
+
     setState((prevState) => ({
       ...prevState,
-      [type]: prevState[type as keyof typeof prevState] + 1,
+      [feedbackMap[type]]: prevState[feedbackMap[type]] + 1,
     }));
   };
 
   const countTotalFeedback = () => state.good + state.neutral + state.bad;
+
   const countPositiveFeedbackPercentage = () => {
     const total = countTotalFeedback();
     return total > 0 ? Math.round((state.good / total) * 100) : 0;
@@ -28,10 +37,10 @@ const App: React.FC = () => {
   const totalFeedback = countTotalFeedback();
 
   return (
-    <div>
+    <div className={styles.containerFeedback}>
       <Section title="Please leave feedback">
         <FeedbackOptions
-          options={["good", "neutral", "bad"]}
+          options={["😊", "😐", "😢"]}
           onLeaveFeedback={handleFeedback}
         />
       </Section>

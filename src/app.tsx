@@ -1,41 +1,56 @@
 import {
-  FriendList,
-  Profile,
+  FeedbackOptions,
+  Section,
   Statistics,
-  TransactionHistory,
+  Notification,
 } from "./components";
-import styles from "./app.module.css";
-import userData from "./data/user.json";
-import statsData from "./data/stats.json";
-import friendsData from "./data/friends.json";
-import transactionsData from "./data/transactions.json";
+import React, { useState } from "react";
+const App: React.FC = () => {
+  const [state, setState] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
 
-export default function App() {
+  const handleFeedback = (type: string) => {
+    setState((prevState) => ({
+      ...prevState,
+      [type]: prevState[type as keyof typeof prevState] + 1,
+    }));
+  };
+
+  const countTotalFeedback = () => state.good + state.neutral + state.bad;
+  const countPositiveFeedbackPercentage = () => {
+    const total = countTotalFeedback();
+    return total > 0 ? Math.round((state.good / total) * 100) : 0;
+  };
+
+  const totalFeedback = countTotalFeedback();
+
   return (
-    <main className={styles.container}>
-      <section className={styles.middleSection}>
-        <div className={styles.profile}>
-          <Profile
-            username={userData.username}
-            tag={userData.tag}
-            location={userData.location}
-            avatar={userData.avatar}
-            stats={userData.stats}
+    <div>
+      <Section title="Please leave feedback">
+        <FeedbackOptions
+          options={["good", "neutral", "bad"]}
+          onLeaveFeedback={handleFeedback}
+        />
+      </Section>
+
+      {totalFeedback > 0 ? (
+        <Section title="Statistics">
+          <Statistics
+            good={state.good}
+            neutral={state.neutral}
+            bad={state.bad}
+            total={totalFeedback}
+            positivePercentage={countPositiveFeedbackPercentage()}
           />
-        </div>
-
-        <div className={styles.statistics}>
-          <Statistics title="Upload Stats" stats={statsData} />
-        </div>
-
-        <div className={styles.transactions}>
-          <TransactionHistory items={transactionsData} />
-        </div>
-      </section>
-
-      <section className={styles.friendList}>
-        <FriendList friends={friendsData} />
-      </section>
-    </main>
+        </Section>
+      ) : (
+        <Notification message="There is no feedback" />
+      )}
+    </div>
   );
-}
+};
+
+export default App;

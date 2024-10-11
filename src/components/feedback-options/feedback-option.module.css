@@ -11,14 +11,14 @@
   align-items: center;
   overflow: hidden;
   background: #565a42;
-  width: 60px;
-  height: 60px;
+  padding: 10px 15px;
   border-radius: 50%;
   border: none;
   font-size: 30px;
   color: #e0ffff;
   font-weight: 500;
   cursor: pointer;
+  text-align: center;
   z-index: 1;
 }
 
